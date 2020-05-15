@@ -1,0 +1,117 @@
+<html>
+
+    <head>
+        <title>fetch dls</title>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        <style>
+            body {
+                font-family: Arial, "Helvetica Neue", Helvetica;
+            }
+
+            li {
+                list-style-type: none;
+                line-height: 60px;
+            }
+
+            h4 {
+                font-size: 32px;
+            }
+
+            a {
+                font-size: 24px;
+                text-decoration: none;
+            }
+
+            input {
+                font-size: 28px;
+            }
+
+            button {
+                font-size: 28px;
+            }
+        </style>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="manifest" href="/manifest.json" />
+    </head>
+
+    <body>
+        <div style="margin-bottom:15px;">
+            <input type="text" id="searchtext" placeholder="TITLE SEARCH" style="width:63%;"> <button
+                onclick="StartSearch();" style="width:15%;">🔍</button> <button onclick="location.reload();"
+                style="width:15%;">🌀</button></div>
+        <div id="dlarea" style="border:thin solid black;margin-bottom:10px;"></div>
+        <div id="output" style="border:thin solid black;margin-bottom:10px;"></div>
+        <script>
+            var outputarea = document.getElementById("output");
+            var dlarea = document.getElementById("dlarea");
+
+            $(document).ready(function () {
+                outputarea.innerHTML = "LOADING...";
+                fetchurl = 'https://getcomics-cor.herokuapp.com/';
+
+                $.ajax({
+                    url: fetchurl,
+                    type: 'GET',
+                    dataType: "json",
+                    success: DisplayData
+                });
+            });
+
+            function StartSearch() {
+                outputarea.innerHTML = "LOADING...";
+                fetchurl = 'https://getcomics-cor.herokuapp.com/?search=' + encodeURIComponent(document.getElementById("searchtext").value);
+
+                $.ajax({
+                    url: fetchurl,
+                    type: 'GET',
+                    dataType: "json",
+                    success: DisplayData
+                });
+            }
+
+            function getdl(fetchurl) {
+                //console.log(fetchurl);
+                $.ajax({
+                    url: fetchurl,
+                    type: 'GET',
+                    dataType: "json",
+                    success: ShowDLs
+                });
+            }
+
+            function ShowDLs(data) {
+                //console.log(data);
+                dlarea.innerHTML = "<h4>DOWNLOAD LINKS</h4>";
+                $.each(data, function (key, value) {
+                    dlarea.innerHTML += "<li><a href=\"" + value + "\">" + key + "</a></li>";
+                });
+            }
+
+            function DisplayData(data) {
+                //console.log(data);
+                outputarea.innerHTML = "<h4>RESULTS</h4>";
+                $.each(data.channel.item, function (i, item) {
+                    outputarea.innerHTML += "<li><a href=\"javascript:;\" onclick=\"getdl(\'https://getcomics-cor.herokuapp.com/?get=" + encodeURIComponent(item.link) + "\')\">" + item.title + "</a></li>";
+                });
+            }
+        </script>
+        <script>
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker.register("/pwabuilder-sw.js").then((reg) => {
+                        console.log("Service worker registered.", reg);
+                    });
+                });
+            }
+        </script>
+        <script type="module">
+            import "https://cdn.jsdelivr.net/npm/@pwabuilder/pwaupdate";
+
+            const el = document.createElement("pwa-update");
+            document.body.appendChild(el);
+        </script>
+    </body>
+
+</html>
