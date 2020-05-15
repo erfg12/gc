@@ -94,12 +94,15 @@
                 style="width:15%;">🌀</button></div>
         <div id="dlarea" style="border:thin solid black;margin-bottom:10px;"></div>
         <div id="output" style="border:thin solid black;margin-bottom:10px;"></div>
+        <button onclick="GetMoreData();" style="width:98%;">☄️ LOAD MORE</button>
         <script>
             var outputarea = document.getElementById("output");
             var dlarea = document.getElementById("dlarea");
+            var page = 1;
+            var type = "featured";
 
             $(document).ready(function () {
-                outputarea.innerHTML = "LOADING...";
+                outputarea.innerHTML = "<h4>FEATURED</h4>";
                 fetchurl = 'https://getcomics-cor.herokuapp.com/';
 
                 $.ajax({
@@ -110,9 +113,34 @@
                 });
             });
 
+            $("#searchtext").on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    StartSearch();
+                }
+            });
+
             function StartSearch() {
-                outputarea.innerHTML = "LOADING...";
-                fetchurl = 'https://getcomics-cor.herokuapp.com/?search=' + encodeURIComponent(document.getElementById("searchtext").value);
+                page = 1;
+                type = "search";
+                outputarea.innerHTML = "<h4>RESULTS</h4>";
+                fetchurl = 'https://getcomics-cor.herokuapp.com/?search=' + encodeURIComponent(document.getElementById("searchtext").value) + "&page=" + page;
+
+                $.ajax({
+                    url: fetchurl,
+                    type: 'GET',
+                    dataType: "json",
+                    success: DisplayData
+                });
+            }
+
+            function GetMoreData() {
+                page += 1;
+
+                if (type == "search") {
+                    fetchurl = 'https://getcomics-cor.herokuapp.com/?search=' + encodeURIComponent(document.getElementById("searchtext").value) + "&page=" + page;
+                } else {
+                    fetchurl = 'https://getcomics-cor.herokuapp.com/' + "?page=" + page;
+                }
 
                 $.ajax({
                     url: fetchurl,
@@ -142,7 +170,6 @@
 
             function DisplayData(data) {
                 //console.log(data);
-                outputarea.innerHTML = "<h4>RESULTS</h4>";
                 $.each(data.channel.item, function (i, item) {
                     outputarea.innerHTML += "<li><a href=\"javascript:;\" onclick=\"getdl(\'https://getcomics-cor.herokuapp.com/?get=" + encodeURIComponent(item.link) + "\')\">" + item.title + "</a></li>";
                 });
