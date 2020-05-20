@@ -1,12 +1,12 @@
 {
     "lang": "en-us",
-    "name": "G.C.",
+    "name": "Get Comics",
     "scope": "/",
     "display": "standalone",
-    "start_url": "https://newagesoldier.com/gc",
-    "short_name": "G.C.",
+    "start_url": "https://newagesoldier.com/gc-pwa-app",
+    "short_name": "Get Comics",
     "theme_color": "transparent",
-    "description": "Hacking and Modding Tutorials",
+    "description": "I am not associated with GetComics.info",
     "orientation": "any",
     "background_color": "transparent",
     "related_applications": [],
@@ -25,6 +25,6 @@
             "purpose": "maskable any"
         }
     ],
-    "url": "https://newagesoldier.com/gc",
+    "url": "https://newagesoldier.com/gc-pwa-app",
     "screenshots": []
 }
