@@ -42,6 +42,12 @@
         <link rel="apple-touch-icon" sizes="152x152" href="images/apple-icon-152.png">
         <link rel="apple-touch-icon" sizes="120x120" href="images/apple-icon-120.png">
 
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+        <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
         <meta name="apple-mobile-web-app-capable" content="yes">
 
         <link rel="apple-touch-startup-image" href="images/apple-splash-2048-2732.png"
@@ -92,17 +98,20 @@
             <input type="text" id="searchtext" placeholder="TITLE SEARCH" style="width:63%;"> <button
                 onclick="StartSearch();" style="width:15%;">🔍</button> <button onclick="location.reload();"
                 style="width:15%;">🌀</button></div>
-        <div id="dlarea" style="border:thin solid black;margin-bottom:10px;"></div>
-        <div id="output" style="border:thin solid black;margin-bottom:10px;"></div>
+        <div id="header"></div>
+        <div id="output" style="border:thin solid black;margin-bottom:10px;">
+            <h1>LOADING, PLEASE WAIT...</h1>
+        </div>
         <button onclick="GetMoreData();" style="width:98%;">☄️ LOAD MORE</button>
         <script>
             var outputarea = document.getElementById("output");
             var dlarea = document.getElementById("dlarea");
+            var headerdiv = document.getElementById("header");
             var page = 1;
             var type = "featured";
 
             $(document).ready(function () {
-                outputarea.innerHTML = "<h4>FEATURED</h4>";
+                headerdiv.innerHTML = "<h4>FEATURED</h4>";
                 fetchurl = 'https://getcomics-cor.herokuapp.com/';
 
                 $.ajax({
@@ -122,7 +131,8 @@
             function StartSearch() {
                 page = 1;
                 type = "search";
-                outputarea.innerHTML = "<h4>RESULTS</h4>";
+                headerdiv.innerHTML = "<h4>SEARCH RESULTS</h4>";
+                outputarea.innerHTML = "<h1>LOADING, PLEASE WAIT...</h1>";
                 fetchurl = 'https://getcomics-cor.herokuapp.com/?search=' + encodeURIComponent(document.getElementById("searchtext").value) + "&page=" + page;
 
                 $.ajax({
@@ -162,14 +172,18 @@
 
             function ShowDLs(data) {
                 //console.log(data);
-                dlarea.innerHTML = "<h4>DOWNLOAD LINKS</h4>";
+                TheData = "<h4>DOWNLOAD LINKS</h4>";
                 $.each(data, function (key, value) {
-                    dlarea.innerHTML += "<li><a href=\"" + value + "\">" + key + "</a></li>";
+                    TheData += "<li><a href=\"" + value + "\">" + key + "</a></li>";
                 });
+                $.fancybox.open(TheData);
             }
 
             function DisplayData(data) {
                 //console.log(data);
+                if (page <= 1) {
+                    outputarea.innerHTML = ""; // clear loading message
+                }
                 $.each(data.channel.item, function (i, item) {
                     outputarea.innerHTML += "<li><a href=\"javascript:;\" onclick=\"getdl(\'https://getcomics-cor.herokuapp.com/?get=" + encodeURIComponent(item.link) + "\')\">" + item.title + "</a></li>";
                 });
