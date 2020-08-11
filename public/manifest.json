@@ -3,7 +3,7 @@
     "name": "Get Comics",
     "scope": "/",
     "display": "standalone",
-    "start_url": "https://newagesoldier.com/gc-pwa-app",
+    "start_url": "https://gcweb-fb927.web.app",
     "short_name": "Get Comics",
     "theme_color": "transparent",
     "description": "I am not associated with GetComics.info",
@@ -25,6 +25,6 @@
             "purpose": "maskable any"
         }
     ],
-    "url": "https://newagesoldier.com/gc-pwa-app",
+    "url": "https://gcweb-fb927.web.app",
     "screenshots": []
 }
